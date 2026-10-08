@@ -1,0 +1,4 @@
+import {categories,experiences} from '@/data/experiences';
+const valid=new Set(experiences.map(x=>x.id));
+export function cleanSelections(value:unknown):string[]{return Array.isArray(value)?[...new Set(value.filter((x):x is string=>typeof x==='string'&&valid.has(x)))]:[]}
+export function getResult(ids:string[]){const selected=experiences.filter(x=>ids.includes(x.id));const highlights=categories.map(cat=>selected.find(x=>x.category===cat.id)).filter((x):x is typeof experiences[number]=>Boolean(x));for(const item of selected){if(highlights.length>=6)break;if(!highlights.some(x=>x.id===item.id))highlights.push(item)}const counts=categories.map(cat=>selected.filter(x=>x.category===cat.id).length);const max=counts.indexOf(Math.max(...counts));return {selected,highlights,total:selected.length,identity:selected.length?['The Nostalgic Soul','The Heart Keeper','The Explorer','The Dream Chaser','The Free Spirit'][max]:'The Storyteller'};}
